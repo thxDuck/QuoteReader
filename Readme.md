@@ -10,3 +10,11 @@ L'objectif est de créer un lecteur de quotes d'un célèbre site de d'extraits 
 5. Affichage simple des quotes avec différent tris
 6. Ajout d'une fonctionnalité de "Read/Unread"
 7. Intégration de tests unitaires
+
+## Parsing HTML:
+Utilisation du package NuGet : (AngleSharp)[https://github.com/AngleSharp/AngleSharp] 
+Avantages : licence MIT, Rapide, support de LINQ sur le DOM html 🤯
+ Installation : 
+ ```shell
+ dotnet add package AngleSharp
+ ```

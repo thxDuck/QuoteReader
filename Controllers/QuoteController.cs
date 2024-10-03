@@ -37,7 +37,7 @@ namespace QuoteReader.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (quote == null)
             {
-                Quote newQuote = await QuoteService.FetchQuote(id);
+                Quote newQuote = await QuoteService.GetQuote(id);
                 return View(newQuote);
             }
 
