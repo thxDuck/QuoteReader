@@ -11,7 +11,7 @@ namespace QuoteReader.Services
             return $"{BaseUrl}{id}.html"
         }
 
-        
+
         private static string BaseUrl = "https://danstonchat.com/quote/"
 
         public static async Task<string> FetchQuote(int? Id)
@@ -32,8 +32,6 @@ namespace QuoteReader.Services
             }
 
             return new Quote { Id =0, Description = "", Title = "", Viewed = false, PostedDate = DateTime.Now };
-
-
         }
 
     }
