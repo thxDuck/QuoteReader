@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuoteReader.Data;
+using QuoteReader.ervices;
 
 namespace QuoteReader.Controllers
 {
@@ -25,18 +26,19 @@ namespace QuoteReader.Controllers
         }
 
         // GET: Quote/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            // if (id == null)
+            // {
+            //     return NotFound();
+            // }
 
             var quote = await _context.Quote
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (quote == null)
             {
-                return NotFound();
+                Quote newQuote = await QuoteService.FetchQuote(id);
+                return View(newQuote);
             }
 
             return View(quote);
