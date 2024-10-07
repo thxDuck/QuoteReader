@@ -1,37 +1,28 @@
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace QuoteReader.Services
 {
-    public class HttpService
+    public interface IHttpService
     {
+        Task<string> GetHtmlContentAsync(int id);
+    }
 
+    public class HttpService : IHttpService
+
+    {
         private const string BaseUrl = "https://danstonchat.com/quote/";
         private static string GetUrl(int id)
         {
             return $"{BaseUrl}{id}.html";
         }
 
-        public async Task<Quote> FetchQuote(int id)
+        public async Task<string> GetHtmlContentAsync(int id)
         {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+            using var httpClient = new HttpClient();
+
             string url = GetUrl(id);
-            await ProcessRepositoriesAsync(client, url);
-
-            static async Task ProcessRepositoriesAsync(HttpClient client, string url)
-            {
-
-                var html = await client.GetStringAsync(url);
-                Console.Write(html);
-
-                var document = HtmlParserService.ParseHtml(html);
-            };
-
-            return new Quote { Id = 0, Description = "", Title = "", Viewed = false, PostedDate = DateTime.Now };
+            var response = await httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
 
     }

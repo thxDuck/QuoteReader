@@ -1,15 +1,19 @@
 
 using AngleSharp;
 using AngleSharp.Dom;
+using Mono.TextTemplating;
 
 namespace QuoteReader.Services
 {
-    public class HtmlParserService
+
+    public interface IHtmlParserService
     {
-
-
-
-        public static async Task<IDocument> ParseHtml(string html)
+        Task<IDocument> Parse(string html);
+    }
+    
+    public class HtmlParserService : IHtmlParserService
+    {
+        public async Task<IDocument> Parse(string html)
         {
             //Use the default configuration for AngleSharp
             var config = Configuration.Default;

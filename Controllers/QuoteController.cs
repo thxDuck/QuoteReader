@@ -13,6 +13,8 @@ namespace QuoteReader.Controllers
     public class QuoteController : Controller
     {
         private readonly QuoteReaderContext _context;
+        private readonly QuoteService _quoteService = new(new HttpService(), new HtmlParserService());
+
 
         public QuoteController(QuoteReaderContext context)
         {
@@ -37,7 +39,8 @@ namespace QuoteReader.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (quote == null)
             {
-                Quote newQuote = await QuoteService.GetQuote(id);
+                var newQuote = _quoteService.GetQuote(id);
+                // Quote newQuote = await QuoteService.GetQuote(id);
                 return View(newQuote);
             }
 
