@@ -13,7 +13,10 @@ namespace QuoteReader.Controllers
     public class QuoteController : Controller
     {
         private readonly QuoteReaderContext _context;
-        private readonly QuoteService _quoteService = new(new HttpService(), new HtmlParserService());
+        private readonly QuoteService _quoteService = new(
+            new HttpService(),
+            new HtmlParserService(),
+            new QuoteExtractorService());
 
 
         public QuoteController(QuoteReaderContext context)
@@ -28,19 +31,18 @@ namespace QuoteReader.Controllers
         }
 
         // GET: Quote/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            // if (id == null)
-            // {
-            //     return NotFound();
-            // }
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var quote = await _context.Quote
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (quote == null)
             {
-                var newQuote = _quoteService.GetQuote(id);
-                // Quote newQuote = await QuoteService.GetQuote(id);
+                var newQuote = await _quoteService.GetQuote((int)id);
                 return View(newQuote);
             }
 

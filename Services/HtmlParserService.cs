@@ -23,9 +23,7 @@ namespace QuoteReader.Services
 
             //Just get the DOM representation
             IDocument document = await context.OpenAsync(req => req.Content(html));
-
-            //Serialize it back to the console
-            Console.WriteLine(document.DocumentElement.OuterHtml);
+            
             return document;
         }
 
