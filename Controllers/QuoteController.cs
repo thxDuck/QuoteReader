@@ -42,7 +42,7 @@ namespace QuoteReader.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (quote == null)
             {
-                var newQuote = await _quoteService.GetQuote((int)id);
+                var newQuote = await _quoteService.GetQuoteFromWeb((int)id);
                 return View(newQuote);
             }
 

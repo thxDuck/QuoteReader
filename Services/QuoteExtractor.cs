@@ -1,3 +1,4 @@
+using AngleSharp.Css.Dom;
 using AngleSharp.Dom;
 
 namespace QuoteReader.Services
@@ -16,9 +17,9 @@ namespace QuoteReader.Services
         public Quote ExtractQuoteFromDocument(IDocument document)
         {
             string title = GetTitle(document);
-            string content = GetContent(document);
+            List<QuoteContent> content = GetContent(document);
 
-            return new Quote { Id = 0, Description = content, Title = title, Viewed = false, PostedDate = DateTime.Now };
+            return new Quote { Id = 0, Content = content, Title = title, Viewed = false, PostedDate = DateTime.Now };
         }
 
         private string GetTitle(IDocument document)
@@ -29,21 +30,21 @@ namespace QuoteReader.Services
             return titleElement.TextContent;
         }
 
-        private string GetContent(IDocument document)
+        private List<QuoteContent> GetContent(IDocument document)
         {
             IElement? contentBloc = document.QuerySelector(contentSelector);
-            if (contentBloc is null) return "";
-            List<string> contentList = [];
-
+            if (contentBloc is null) return [new QuoteContent { Username = "", Color = "", Message = "" }];
+            List<QuoteContent> quoteContentList = [];
             IEnumerable<IElement> nodes = contentBloc.Children.Where(item => item.TagName == "SPAN" || item.TagName == "SPAN");
 
             foreach (IElement element in nodes)
             {
                 var username = element.TextContent;
                 var content = element.NextSibling?.TextContent ?? "";
-                contentList.Add(username + content);
+                var color = element.GetStyleSheets();
+                quoteContentList.Add(new QuoteContent { Username = username, Color = "", Message = content });
             }
-            return string.Join("\r\n", contentList);
+            return quoteContentList;
         }
     }
 }

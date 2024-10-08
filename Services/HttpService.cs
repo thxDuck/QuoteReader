@@ -3,7 +3,7 @@ namespace QuoteReader.Services
 {
     public interface IHttpService
     {
-        Task<string> GetHtmlContentAsync(int id);
+        Task<string> FetchQuotePage(int id);
     }
 
     public class HttpService : IHttpService
@@ -15,7 +15,7 @@ namespace QuoteReader.Services
             return $"{BaseUrl}{id}.html";
         }
 
-        public async Task<string> GetHtmlContentAsync(int id)
+        public async Task<string> FetchQuotePage(int id)
         {
             using var httpClient = new HttpClient();
 
