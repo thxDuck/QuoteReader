@@ -8,6 +8,7 @@ namespace QuoteReader.Controllers
     public class QuoteController : Controller
     {
         private readonly QuoteReaderContext _context;
+
         private readonly QuoteService _quoteService = new(
             new HttpService(),
             new HtmlParserService(),
@@ -55,7 +56,7 @@ namespace QuoteReader.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Viewed,PostedDate")] Quote quote)
+        public async Task<IActionResult> Create([Bind("Id,Title,Viewed,PostedDate")] Quote quote)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +88,7 @@ namespace QuoteReader.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Viewed,PostedDate")] Quote quote)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Viewed,PostedDate")] Quote quote)
         {
             if (id != quote.Id)
             {
