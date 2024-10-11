@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using QuoteReader.Models;
+using System.Diagnostics;
 
 namespace QuoteReader.Controllers;
 

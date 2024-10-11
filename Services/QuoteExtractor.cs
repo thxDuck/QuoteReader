@@ -11,13 +11,19 @@ namespace QuoteReader.Services
     public class QuoteExtractorService : IQuoteExtractor
     {
 
-        private string titleSelector = "main h1";
-        private string contentSelector = "main div:nth-child(2) p";
+        private readonly string titleSelector = "main h1";
+        private readonly string contentSelector = "main div:nth-child(2) p";
+        private readonly MessageContent EMPTY_MESSAGE = new()
+        {
+            Username = "",
+            Color = "",
+            Text = ""
+        };
 
         public Quote ExtractQuoteFromDocument(IDocument document)
         {
             string title = GetTitle(document);
-            List<QuoteContent> content = GetContent(document);
+            List<MessageContent> content = GetContent(document);
 
             return new Quote { Id = 0, Content = content, Title = title, Viewed = false, PostedDate = DateTime.Now };
         }
@@ -30,11 +36,13 @@ namespace QuoteReader.Services
             return titleElement.TextContent;
         }
 
-        private List<QuoteContent> GetContent(IDocument document)
+        private List<MessageContent> GetContent(IDocument document)
         {
             IElement? contentBloc = document.QuerySelector(contentSelector);
-            if (contentBloc is null) return [new QuoteContent { Username = "", Color = "", Message = "" }];
-            List<QuoteContent> quoteContentList = [];
+
+            if (contentBloc is null) return [EMPTY_MESSAGE];
+
+            List<MessageContent> quoteContentList = [];
             IEnumerable<IElement> nodes = contentBloc.Children.Where(item => item.TagName == "SPAN" || item.TagName == "SPAN");
 
             foreach (IElement element in nodes)
@@ -42,7 +50,7 @@ namespace QuoteReader.Services
                 var username = element.TextContent;
                 var content = element.NextSibling?.TextContent ?? "";
                 var color = element.GetStyleSheets();
-                quoteContentList.Add(new QuoteContent { Username = username, Color = "", Message = content });
+                quoteContentList.Add(new() { Username = username, Color = "", Text = content });
             }
             return quoteContentList;
         }

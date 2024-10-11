@@ -1,7 +1,6 @@
 
 using AngleSharp;
 using AngleSharp.Dom;
-using Mono.TextTemplating;
 
 namespace QuoteReader.Services
 {
@@ -10,7 +9,7 @@ namespace QuoteReader.Services
     {
         Task<IDocument> Parse(string html);
     }
-    
+
     public class HtmlParserService : IHtmlParserService
     {
         public async Task<IDocument> Parse(string html)
@@ -23,7 +22,7 @@ namespace QuoteReader.Services
 
             //Just get the DOM representation
             IDocument document = await context.OpenAsync(req => req.Content(html));
-            
+
             return document;
         }
 
