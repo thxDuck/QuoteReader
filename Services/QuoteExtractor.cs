@@ -13,6 +13,7 @@ namespace QuoteReader.Services
 
         private readonly string titleSelector = "main h1";
         private readonly string contentSelector = "main div:nth-child(2) p";
+        static readonly string cssColorAttributeName = "color: ";
         private readonly MessageContent EMPTY_MESSAGE = new()
         {
             Username = "",
@@ -35,7 +36,17 @@ namespace QuoteReader.Services
 
             return titleElement.TextContent;
         }
+        //string colorAttributeName = "color: ";
+        private string GetColorFromStyleAttribute(string cssSpanStyle)
+        {
+            int indexOfColorAttribute = cssSpanStyle.IndexOf(cssColorAttributeName);
+            if (indexOfColorAttribute == -1) return "";
 
+            string restOfCssColorStyle = cssSpanStyle[(indexOfColorAttribute + cssColorAttributeName.Length)..];
+            string colorValue = restOfCssColorStyle.Split(';')[0];
+
+            return colorValue;
+        }
         private List<MessageContent> GetContent(IDocument document)
         {
             IElement? contentBloc = document.QuerySelector(contentSelector);
@@ -47,10 +58,19 @@ namespace QuoteReader.Services
 
             foreach (IElement element in nodes)
             {
+                string color = "RGB(170, 170, 170)";
                 var username = element.TextContent;
                 var content = element.NextSibling?.TextContent ?? "";
-                var color = element.GetStyleSheets();
-                quoteContentList.Add(new() { Username = username, Color = "", Text = content });
+                IEnumerable<IStyleSheet> styles = element.GetStyleSheets();
+                var styleAttribute = element.GetAttribute("style");
+
+                bool isColorAttributePresent = styleAttribute?.IndexOf("color: ") >= 0;
+                if (styleAttribute != null && isColorAttributePresent)
+                {
+                    color = GetColorFromStyleAttribute(styleAttribute);
+                }
+
+                quoteContentList.Add(new() { Username = username, Color = color, Text = content });
             }
             return quoteContentList;
         }
