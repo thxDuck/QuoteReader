@@ -29,20 +29,23 @@ namespace QuoteReader.Controllers
         // GET: Quote/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
 
             var quote = await _context.Quote
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (quote == null)
-            {
-                var newQuote = await _quoteService.GetQuoteFromWeb((int)id);
-                return View(newQuote);
-            }
 
-            return View(quote);
+            if (quote != null) return View(quote);
+
+            var newQuote = await _quoteService.GetQuoteFromWeb((int)id);
+            if (newQuote is null) return NotFound();
+
+            newQuote.Viewed = false;
+
+            this._context.Add(newQuote);
+            await this._context.SaveChangesAsync();
+
+            return View(newQuote);
         }
 
         // GET: Quote/Create
